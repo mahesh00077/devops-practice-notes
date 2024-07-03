@@ -1,0 +1,32 @@
+pipeline{
+    agent any
+    
+    stages{
+        stage('clone project'){
+            steps{
+                git branch:'main', url:'https://github.com/Jayesh321/dev.git'
+            }
+        }
+        stage('image build'){
+            steps{
+                sh "docker image build -t mahesh0077/todoapp:v${BUILD_ID} ."
+                sh "docker image tag mahesh0077/todoapp:v${BUILD_ID} mahesh0077/todoapp:latest"
+            }
+        }
+        stage('image push'){
+            steps{
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'pass', usernameVariable: 'user')]) {
+                    sh "docker login -u ${user} -p ${pass}"
+                    sh "docker image push mahesh0077/todoapp:v${BUILD_ID}"
+                    sh "docker image push mahesh0077/todoapp:latest"
+                    sh "docker image rmi mahesh0077/todoapp:v${BUILD_ID} mahesh0077/todoapp:latest"
+                }
+            }
+        }
+        stage('container creating'){
+            steps{
+                sh "docker run -itd --name todoapp -p 3000:3000 mahesh0077/todoapp:latest"
+            }
+        }
+    }
+}
