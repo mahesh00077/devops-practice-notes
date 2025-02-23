@@ -104,6 +104,11 @@
     </tr>
   </table>
 </div>
-
+<div>
+  <h2>Vagrant Box Links</h2>
+  <ul>
+    <li><a href="https://portal.cloud.hashicorp.com/vagrant/discover?query=">vagrant box link 1</a></li>
+  </ul>
+</div>
 </body>
 </html>
